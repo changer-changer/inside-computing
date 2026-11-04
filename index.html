@@ -6195,7 +6195,7 @@ function declutterLabels(){
     if(r.right<0||r.bottom<0||r.left>innerWidth||r.top>innerHeight) continue;
     // On narrow screens, CSS2D labels near the viewport edge are clipped and
     // unreadable. Hide the clipped ones instead of showing half a word.
-    if(!el.classList.contains('active') && (r.left<4 || r.right>innerWidth-4 || r.top<4)) {
+    if(r.left<4 || r.right>innerWidth-4 || r.top<4) {
       el.classList.add('occluded');
       continue;
     }
