@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#07100d" />
+<title>实验 · 计算之境</title>
+<link rel="stylesheet" href="../course/assets/course.css" />
+<style>
+  .lab-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:18px 0}
+  .lab-mode{border:1px solid var(--line);border-radius:11px;padding:14px 16px;background:rgba(255,255,255,.02)}
+  .lab-mode h4{margin:0 0 5px;font-size:12.5px;color:var(--ink)}
+  .lab-mode p{margin:0;font-size:11.5px;line-height:1.7;color:var(--dim)}
+  .checklist{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+  .check-item{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:11.5px;line-height:1.6;color:var(--dim);cursor:pointer}
+  .check-item:hover{background:rgba(255,255,255,.03)}
+  .check-item input{margin-top:3px;accent-color:#c8e58f}
+  .check-item.done{color:var(--teal);border-color:rgba(99,209,180,.3);background:rgba(99,209,180,.05)}
+  .lab-score-form{display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap}
+  .lab-score-form input{width:72px}
+  .lab-score-form button{padding:6px 9px;font-size:10.5px}
+  .lab-commands{background:#050d09;border:1px solid var(--line);border-radius:9px;padding:13px 15px;font:11px/1.8 var(--mono);color:#cfe0d2;overflow:auto;white-space:pre-wrap}
+  .lab-commands .p{color:var(--lime)}
+  @media(max-width:860px){.lab-mode-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-mode="lab" data-lab="bomb" data-base="../">
+<header data-topbar></header>
+<main class="container course-shell">
+  <aside class="toc" aria-label="实验目录">
+    <div class="toc-title">实验导航</div>
+    <div id="labToc"></div>
+    <div class="toc-cta" id="labScoreBox">
+      <b>实验得分</b>
+      <div style="font:600 22px/1.2 var(--mono);color:var(--lime)"><span data-lab-score-big>0</span><span style="font-size:10px;color:var(--mute)"> / <span data-lab-total>100</span></span></div>
+      <div class="meter" style="margin:7px 0 9px"><i data-lab-meter style="width:0"></i></div>
+      <span data-lab-score style="font:10px/1.4 var(--mono)">0 / 100</span>
+      <p style="font-size:10px;line-height:1.55;margin:7px 0 0;color:var(--mute)" data-score-note>分数来自本站检查；官方成绩以实验机为准。</p>
+    </div>
+  </aside>
+  <article class="lesson">
+    <header class="lesson-head" id="labHead">
+      <div class="crumb"><b>LAB</b><span>/</span><span>CS:APP</span></div>
+      <h1>载入实验…</h1>
+      <p class="summary">正在读取实验内容。</p>
+    </header>
+    <div id="labBody"></div>
+  </article>
+</main>
+<footer data-footer></footer>
+<script>(function(){var q=new URLSearchParams(location.search).get('lab')||'bomblab';var map={bomb:'bomblab',attack:'attacklab',buffer:'bufferlab',arch:'archlab',cache:'cachelab',perf:'perflab',shell:'shelllab',malloc:'malloclab',proxy:'proxylab'};document.body.dataset.lab=map[q]||q;})();</script>
+<script src="../course/assets/curriculum.js"></script>
+<script src="../course/assets/course.js"></script>
+<script src="../course/assets/viz.js"></script>
+<script src="../engine/float32-lab.js"></script>
+<script src="../engine/cache-lab.js"></script>
+<script src="../engine/y86-assembler.js"></script>
+<script src="../engine/y86-subset.js"></script>
+<script src="../engine/y86-pipeline.js"></script>
+<script src="../engine/hcl-control.js"></script>
+<script src="../engine/architecture-copy.js"></script>
+<script src="../engine/vm-paging.js"></script>
+<script src="../engine/process-lab.js"></script>
+<script src="../engine/link-lab.js"></script>
+<script src="../engine/io-lab.js"></script>
+<script src="../engine/http-lab.js"></script>
+<script src="../engine/concurrency-lab.js"></script>
+<script src="../engine/performance-lab.js"></script>
+<script src="../engine/heap-lab.js"></script>
+<script src="../engine/bomb-exercise.js"></script>
+<script src="malloc-harness.js"></script>
+<script src="cache-harness.js"></script>
+<script src="transpose-harness.js"></script>
+<script src="perf-harness.js"></script>
+<script src="attack-sim.js"></script>
+<script src="proxy-harness.js"></script>
+<script src="shell-harness.js"></script>
+<script src="buffer-sim.js"></script>
+<script src="lab-kit.js"></script>
+</body>
+</html>

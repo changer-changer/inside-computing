@@ -1,0 +1,23 @@
+name: Feature or content proposal
+description: 提出课程内容、实验模型或交互改进
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 要解决的学习问题
+      description: 学生在哪一步卡住？为什么现有内容不够？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+      description: 页面、交互、检查方式或参考资料
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: 模型边界
+      description: 这个改动是模拟、子集还是官方工具？请说明会怎样标注。

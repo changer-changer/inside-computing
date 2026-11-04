@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict');
+const transfer=require('../engine/yo-transfer');
+const {parseYo}=require('../engine/yo-loader');
+const source='0x000: 30f00100000000000000 | irmovq\n0x00a: 00 | halt\n';
+const encode=x=>'open3d-yo;'+Buffer.from(x).toString('base64');
+assert.deepEqual(parseYo(transfer.decode(encode(source))).bytes,parseYo(source).bytes);
+assert.throws(()=>transfer.decode('other;YWJj'));
+assert.throws(()=>transfer.decode('open3d-yo;AA=A'));
+assert.throws(()=>transfer.decode(encode(Buffer.from([255]))));
+assert.throws(()=>transfer.decode(encode(Buffer.alloc(65537))));
+const cachePayload=transfer.CACHE_PREFIX+Buffer.alloc(100001,65).toString('base64');assert.equal(transfer.decode(cachePayload).length,100001);assert.throws(()=>transfer.decode(transfer.CACHE_PREFIX+Buffer.alloc(262145).toString('base64')));
+const seqPayload=transfer.SEQ_PREFIX+Buffer.from('SEQ trace').toString('base64');assert.equal(transfer.decode(seqPayload),'SEQ trace');assert.throws(()=>transfer.decode(transfer.SEQ_PREFIX+Buffer.alloc(262145).toString('base64')));
+assert.equal(transfer.decode(transfer.SHELL_PREFIX+Buffer.from('report').toString('base64')),'report');
+assert.throws(()=>parseYo(transfer.decode(encode('not a machine code listing')),8192));
+console.log('Y86 终端传输：解码、内容校验和长度限制通过');

@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict');
+const H=require('../labs/transpose-harness');
+const built=H.build(H.starter);
+assert.match(built.source,/TRESULT/);
+assert.match(built.source,/A_AT/);
+assert.match(built.source,/cache_touch_ptr/);
+assert.ok(built.accesses>=2);
+assert.throws(()=>H.build('void transpose_submit(int M,int N,int A[N][M],int B[M][N]){ }'),/没有找到/);
+const sample='TRESULT 32x32 N=32 pass=1 misses=284 hits=1764 evictions=252 threshold=300\nTRESULT 64x64 N=64 pass=1 misses=1176 hits=9064 evictions=1144 threshold=1300\nTRESULT 61x61 N=61 pass=1 misses=1802 hits=5640 evictions=1770 threshold=2000\nTDONE';
+const r=H.parse(sample);
+assert.equal(r.ok,true);assert.equal(r.results.length,3);assert.equal(r.results[1].misses,1176);
+const bad=H.parse('TRESULT 32x32 N=32 pass=0 misses=900 hits=10 evictions=900 threshold=300\nTDONE');
+assert.equal(bad.ok,false);
+console.log('Transpose harness：插桩源构造、阈值解析与错误处理通过');

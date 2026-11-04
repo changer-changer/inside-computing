@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict');
+const CL=require('../engine/cache-lab');
+const H=require('../labs/cache-harness');
+const cases=H.makeCases(CL.TraceCache);
+assert.equal(cases.length,4);
+assert.ok(cases.every(c=>c.records.length===220));
+const built=H.build(H.starter,cases);
+assert.match(built.source,/CRESULT/);
+assert.match(built.source,/ca_addr/);
+const parsed=H.parse('CASE 0 pass=1 hits=29 misses=219 evictions=217\nCASE 1 pass=1 hits=205 misses=31 evictions=0\nCASE 2 pass=1 hits=170 misses=71 evictions=39\nCASE 3 pass=1 hits=64 misses=179 evictions=177\nCRESULT 4 4');
+assert.equal(parsed.ok,true);assert.equal(parsed.passed,4);assert.equal(parsed.total,4);assert.equal(parsed.cases.length,4);
+const bad=H.parse('CFAIL case 0\nCASE 0 pass=0 hits=1 misses=2 evictions=0\nCRESULT 0 1');
+assert.equal(bad.ok,false);assert.equal(bad.failures.length,1);
+console.log('Cache harness：4 组用例、C 源构造与结果解析通过');

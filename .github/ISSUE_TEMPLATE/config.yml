@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全问题
+    url: https://github.com/changer-changer/inside-computing/security/advisories/new
+    about: 请通过私密 Security Advisory 报告漏洞，不要公开利用细节。
+  - name: 使用问题
+    url: https://github.com/changer-changer/inside-computing/discussions
+    about: 部署、课程使用与一般问题。

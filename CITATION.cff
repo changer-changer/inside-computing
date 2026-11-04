@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "如果这个项目帮助了你的课程、学习或研究，请引用它。"
+title: "计算之境 · Inside Computing"
+abstract: "A 3D CS:APP course platform with 12 chapters, 10 labs, browser-side checks, learning progress and portfolio export."
+authors:
+  - alias: changer-changer
+    name: "changer-changer and contributors"
+repository-code: "https://github.com/changer-changer/inside-computing"
+url: "https://github.com/changer-changer/inside-computing"
+license: "PolyForm-Noncommercial-1.0.0"
+license-url: "https://github.com/changer-changer/inside-computing/blob/main/LICENSE"
+version: "0.1.0"
+date-released: "2026-11-04"
+keywords:
+  - csapp
+  - computer-systems
+  - education
+  - visualization
+  - wasm
+  - y86

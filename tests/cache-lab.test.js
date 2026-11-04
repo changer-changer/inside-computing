@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict');const {TraceCache,parseTrace,transpose}=require('../engine/cache-lab');
+const m=new TraceCache({s:1,E:1,b:2});let x=m.access('L',0n,1);assert.equal(x[0].hit,false);assert.equal(m.access('L',1n,1)[0].hit,true);x=m.access('L',8n,1);assert.equal(x[0].evicted,0n);assert.deepEqual(m.summary(),{hits:1,misses:2,evictions:1});
+const cross=new TraceCache({s:1,E:1,b:2});assert.equal(cross.access('L',3n,2).length,2);assert.equal(cross.access('M',3n,2).length,4);assert.equal(cross.summary().hits,4);
+const official=new TraceCache({s:1,E:1,b:2,semantics:'cachelab'});assert.equal(official.access('L',3n,2).length,1);assert.equal(official.access('M',3n,2).length,2);assert.deepEqual(official.summary(),{hits:2,misses:1,evictions:0});assert.throws(()=>new TraceCache({semantics:'unknown'}));
+const assoc=new TraceCache({s:0,E:2,b:0});assoc.access('L',0n);assoc.access('L',1n);assoc.access('L',0n);assert.equal(assoc.access('L',2n)[0].evicted,1n);
+const top=new TraceCache();assert.equal(top.access('L',0xffffffffffffffffn)[0].address,0xffffffffffffffffn);assert.throws(()=>top.access('L',0xffffffffffffffffn,2));
+assert.deepEqual(parseTrace(' I 0,1\n L 10,1\n M ffffffffffffffff,1').map(x=>x.operation),['L','M']);assert.throws(()=>parseTrace('L 10,0'));assert.throws(()=>parseTrace('L 10000000000000000,1'));
+assert.equal(parseTrace('L 10,4\n'.repeat(8197)).length,8197);assert.throws(()=>parseTrace('L 10,4\n'.repeat(20001)),/20000/);
+for(const N of [2,8,16,31])for(const block of [1,2])assert(transpose({N,block}).correct);
+const naive=transpose({N:32,block:1}),blocked=transpose({N:32,block:8});assert(blocked.misses<naive.misses,`${blocked.misses} must be less than ${naive.misses}`);
+console.log(`缓存实验：64 位地址、跨行、LRU、轨迹与矩阵转置通过（32×32：逐行 ${naive.misses} misses，8×8 分块 ${blocked.misses} misses）`);

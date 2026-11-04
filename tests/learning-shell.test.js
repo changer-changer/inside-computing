@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict');
+const {LearningShell}=require('../engine/learning-shell');
+const {Y86Terminal}=require('../engine/y86-terminal');
+const {Y86Subset}=require('../engine/y86-subset');
+const {assemble}=require('../engine/y86-assembler');
+let source='irmovq $5, %rax\nhalt',machine=null,dirty=true;
+const simulator=new Y86Terminal({machine:()=>machine,dirty:()=>dirty,load:()=>{machine=new Y86Subset(assemble(source).bytes);dirty=false;return '已装载';},reset:()=>'',step:()=>machine.step(),modified:()=>{},refresh:()=>{},grade:()=>''});
+const data=new Map(),storage={getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)};
+const make=()=>new LearningShell({simulator,storage,editor:{get:()=>source,set:t=>{source=t;dirty=true;}}});const t=make(),run=s=>t.execute(s),out=s=>run(s).text;
+assert.equal(out('pwd'),'/home/student');assert.match(out('ls'),/hello.txt/);
+assert.equal(out('mkdir work'),'');assert.equal(out('cd work'),'');assert.equal(out('pwd'),'/home/student/work');
+assert.equal(out('echo "hello world" > "my file.txt"'),'');assert.equal(out("echo 'second line' >> 'my file.txt'"),'');assert.equal(out('cat "my file.txt"'),'hello world\nsecond line');
+assert.equal(out('cat "my file.txt" | grep second | wc -l'),'1');assert.equal(out('wc -w "my file.txt"'),'4');assert.equal(out('head -n 1 "my file.txt"'),'hello world');
+assert.equal(out('cp "my file.txt" copy.txt'),'');assert.equal(out('mv copy.txt renamed.txt'),'');assert.match(out('ls'),/renamed/);assert.equal(out('rm renamed.txt'),'');
+assert.match(out('rm -rf /'),/需要一个参数/);assert.match(out('cat /etc/passwd'),/没有这个文件/);assert.match(out('echo "unterminated'),/引号未闭合/);assert.match(out('echo hi |'),/缺少命令/);assert.match(out('ls; pwd'),/只支持/);
+assert.match(out('editor save sum.ys'),/已保存/);source='halt';assert.match(out('editor open sum.ys'),/已打开/);assert.match(source,/irmovq/);assert.equal(out('y86 load'),'已装载');assert.match(out('y86 step'),/PC 0xa/);assert.match(out('regs %rax'),/0000000000000005/);
+const t2=make();assert.match(t2.execute('cat /home/student/work/sum.ys').text,/irmovq/);assert.equal(t2.execute('clear').clear,true);
+console.log('学习终端：文件持久化、引号、管道、重定向、编辑器与 Y86 联动检查通过');

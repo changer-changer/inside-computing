@@ -1,0 +1,11 @@
+[
+  {"file":"datalab-handout.tar","sha256":"a3bd21b752ecc7724d284417b1e19aa9f3839554893a4282ebe8e901c9fb2e02"},
+  {"file":"bomb.tar","sha256":"4b005c5d13d53b77fcbb435b87c1e5ef88027144594bb39e1e494f1f93d39ed9"},
+  {"file":"target1.tar","sha256":"7a2aea42ea275cb7620dc0d579113f7b3d41885a3e954bd3cf244cacc6db267d"},
+  {"file":"archlab-handout.tar","sha256":"586fc3347214ccd90e1c7cbfa74560c59584f8cf452d81c653acfd73344797d4"},
+  {"file":"cachelab-handout.tar","sha256":"de37f176d21338c65fc5bd5eb163c06df97fda2a3f1d21f577e25247f80ba64b"},
+  {"file":"perflab-handout.tar","sha256":"ecd223d4809033a25313eec832626973089b09b9d25abaf17128e0159a57fc0f"},
+  {"file":"shlab-handout.tar","sha256":"3aaad75abb6654eb5073690a3af2bc82f3ac031daccdb85866095566b4b0b8cc"},
+  {"file":"malloclab-handout.tar","sha256":"5f7aaeb98fb90e3b59f44627f5ede3eab1f99cf5047492ed40a489e22a859e2c"},
+  {"file":"proxylab-handout.tar","sha256":"9664e70733dc7eb467a15f622f0fcf7f110670e34430478ae4f580aafe964b39"}
+]

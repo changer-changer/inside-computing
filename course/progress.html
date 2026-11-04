@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#07100d" />
+<title>学习档案 · 计算之境</title>
+<link rel="stylesheet" href="assets/course.css" />
+</head>
+<body data-mode="progress" data-base="../" data-page="progress">
+<header data-topbar></header>
+<main class="container" style="padding:46px 0 80px;position:relative;z-index:1">
+  <div class="eyebrow">YOUR RECORD</div>
+  <h1 style="font-size:clamp(32px,4.4vw,52px);letter-spacing:-.05em;font-weight:560;margin:14px 0 8px">学习档案</h1>
+  <p style="color:var(--dim);max-width:720px;margin:0 0 26px">进度只保存在当前浏览器的 localStorage。换设备或清理浏览器前，导出 JSON 备份；导入会覆盖当前进度。</p>
+  <div id="progressSummary"></div>
+  <div class="card" style="margin-bottom:18px"><h4>结业检查 · CAPSTONE</h4><p id="examSummary" style="color:var(--dim)">还没有提交结业检查。</p><p style="margin-top:8px"><a class="btn primary sm" href="exam.html">打开结业检查 →</a></p></div>
+  <div class="dash-grid">
+    <div class="dash-card"><h3>章节 · CHAPTERS</h3><div id="progressChapters"></div></div>
+    <div class="dash-card"><h3>实验 · LABS</h3><div id="progressLabs"></div></div>
+  </div>
+  <div class="card">
+    <h4>数据管理</h4>
+    <p style="margin-bottom:12px">导出包含章节完成、测验作答与实验得分；不包含源码。源码保存在各实验页的本地草稿中。</p>
+    <div class="flex wrap gap8">
+      <button class="btn primary sm" type="button" id="exportProgress">导出进度 JSON</button>
+      <button class="btn sm" type="button" id="exportPortfolio">导出学习作品集（Markdown）</button>
+      <button class="btn sm" type="button" id="importProgress">导入进度</button>
+      <input type="file" id="importFile" accept="application/json,.json" class="hidden" />
+      <button class="btn sm" type="button" id="resetProgress" style="border-color:rgba(239,128,116,.3);color:var(--red)">清空本机进度</button>
+    </div>
+  </div>
+  <div class="callout warn mt24"><div class="c-title">成绩的边界</div><p>“实验得分”是本站自动检查的分数，不等于你所在课程的官方成绩。官方评分以实验机中的原始工具和教师规定为准。</p></div>
+</main>
+<footer data-footer></footer>
+<script src="assets/curriculum.js"></script>
+<script src="assets/course.js"></script>
+</body>
+</html>

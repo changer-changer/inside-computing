@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#07100d" />
+<title>Data Lab · 计算之境</title>
+<link rel="stylesheet" href="../course/assets/course.css" />
+<style>
+  .wb-body .viz{margin:0;border:0;background:transparent;border-radius:0}
+  .wb-body .viz-head{padding:0 0 9px;border-bottom:1px solid var(--line)}
+  .wb-body .viz-body{padding:10px 0 0}
+  .wb-body .viz-foot{padding:8px 0 0}
+  #taskList{max-height:190px;overflow:auto;padding-right:3px}
+  #code{min-height:310px}
+  #console{max-height:170px;min-height:80px;margin:0;border:1px solid var(--line);border-radius:8px}
+  .lab-rules{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .lab-rules .card p{font-size:11.5px}
+  .rule-ok{color:var(--teal)}.rule-bad{color:var(--red)}
+  @media(max-width:860px){.lab-rules{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-mode="lab" data-lab="datalab" data-base="../">
+<header data-topbar></header>
+<main>
+  <section class="lab-hero container">
+    <div class="back"><a href="index.html">← 实验室</a> / <a href="../course/chapter.html?ch=02">第 2 章 · 信息的表示与处理</a></div>
+    <h1>Data Lab</h1>
+    <div class="en">BIT MANIPULATION · WASM32 C</div>
+    <p class="tagline">在真实 Clang/wasm32 编译器下实现 13 个位级函数。规则检查、编译、运行、失败样例和位级观察都在本页完成；不依赖外部服务。</p>
+    <div class="meta">
+      <span class="badge lime">浏览器原生</span><span class="badge plain">13 TASKS</span><span class="badge plain">100 PTS</span><span class="badge plain">C11 · -O0</span>
+    </div>
+    <div class="lab-stats">
+      <div class="stat"><b data-lab-score>0 / 100</b><span>当前得分</span></div>
+      <div class="stat"><b>13</b><span>函数任务</span></div>
+      <div class="stat"><b>~350</b><span>每任务测试样例</span></div>
+      <div class="stat"><b>本地</b><span>代码与评分</span></div>
+    </div>
+  </section>
+
+  <section class="section container" style="padding-top:28px;padding-bottom:0">
+    <div class="lab-rules">
+      <div class="card"><h4>允许的运算</h4><p>整数题：<code>! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</code>，常量 0–255，禁止循环、条件、函数调用、减号、乘除和比较。浮点题允许条件与比较，但仍禁止浮点运算、类型转换和库函数。</p></div>
+      <div class="card"><h4>评分口径</h4><p>每个任务只有当全部确定性测试通过时才得分。运算符超限、使用禁用构造会直接判失败。测试集覆盖边界值与固定随机值，不是形式证明；官方 btest 仍应以实验机为准。</p></div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="workbench">
+      <div class="wb-panel">
+        <div class="wb-head"><h3>工作台 · WORKBENCH</h3><div class="spacer"></div><button class="btn sm" type="button" id="gradeAllBtn">全部评分</button></div>
+        <div class="wb-body" style="display:flex;flex-direction:column;gap:10px">
+          <div id="taskList" class="task-list" role="list" aria-label="Data Lab 任务"></div>
+          <div>
+            <div class="flex between center wrap gap8"><h4 id="taskTitle" style="margin:0;font-size:15px">bitXor</h4><span id="taskOps" class="badge plain">最多 14 ops</span></div>
+            <p id="taskDesc" style="font-size:11.5px;color:var(--dim);margin:5px 0 6px"></p>
+            <details id="hintBox" style="font-size:11.5px;color:var(--dim)"><summary style="cursor:pointer;color:var(--lime)">思路提示（先自己想）</summary><p id="taskHint" style="margin:6px 0 0"></p></details>
+          </div>
+          <div class="editor-wrap" style="min-height:310px;border:1px solid var(--line);border-radius:8px;overflow:hidden">
+            <pre class="editor-lines" aria-hidden="true"></pre>
+            <textarea id="code" class="editor" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" aria-label="Data Lab 函数代码"></textarea>
+          </div>
+          <div class="flex wrap gap8">
+            <button class="btn primary sm" type="button" id="runBtn">编译并运行 ⌘↵</button>
+            <button class="btn sm" type="button" id="checkBtn">只检查规则</button>
+            <button class="btn sm" type="button" id="resetBtn">恢复初始代码</button>
+            <button class="btn sm" type="button" id="exportBtn">导出 bits.c</button>
+          </div>
+          <pre id="console" class="console" role="log" aria-live="polite">准备就绪。选择任务，写代码，然后编译运行。</pre>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+        <div class="wb-panel" style="min-height:0">
+          <div class="wb-head"><h3>评分 · SCORE</h3><div class="spacer"></div><span class="badge plain" id="scoreState">未开始</span></div>
+          <div class="score-panel">
+            <div class="score-big"><b data-lab-score-big>0</b><span>/ 100</span></div>
+            <div class="meter"><i data-lab-meter style="width:0"></i></div>
+            <div class="kv"><span>已解任务</span><b id="solvedCount">0 / 13</b></div>
+            <div class="kv"><span>当前任务</span><b id="curTaskState">未检查</b></div>
+            <div class="kv"><span>当前运算符</span><b id="curOps">—</b></div>
+          </div>
+        </div>
+        <div class="wb-panel" style="min-height:0">
+          <div class="wb-head"><h3>规则 · 测试</h3><div class="spacer"></div><span class="badge plain" id="ruleChip">RULES</span></div>
+          <div class="wb-body">
+            <div id="ruleBox" style="font-size:11.5px;line-height:1.7;color:var(--dim)">还没有检查。</div>
+            <div id="resultList" class="test-results"></div>
+          </div>
+        </div>
+        <div class="wb-panel" style="min-height:0">
+          <div class="wb-head"><h3>位级观察</h3><div class="spacer"></div><div class="seg"><button type="button" data-viz="bit" class="on">32 位</button><button type="button" data-viz="float">FLOAT</button></div></div>
+          <div class="wb-body"><div id="vizInt"></div><div id="vizFloat" hidden></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" style="padding-top:0">
+    <div class="section-head"><div><span class="eyebrow">HOW IT WORKS</span><h2>这不是“看答案”的练习</h2></div></div>
+    <div class="grid-3">
+      <div class="card"><h4>真实编译</h4><p>你的函数与测试 harness 一起送入浏览器内的 Clang/wasm32，编译失败会显示编译器原始诊断；运行结果来自 wasm 程序，不是 JS 模拟。</p></div>
+      <div class="card"><h4>规则先于正确性</h4><p>本地规则检查会先拦下禁用运算符、超限常量、控制流和函数调用。它不替代官方 <code>dlc</code>，但能让你在写代码时就知道边界。</p></div>
+      <div class="card"><h4>失败样例可复现</h4><p>测试失败时显示第一组失败输入、实际值与期望值。把它带回上面的 32 位手术台，逐位看哪一步错了。</p></div>
+    </div>
+    <div class="callout warn mt24"><div class="c-title">边界与诚信</div><p>测试集是确定性的，覆盖常见边界与随机值，但不能证明所有输入正确；官方评分以实验机中的 <code>dlc</code>/<code>btest</code> 为准。页面不提供标准答案；请先自己推导，再使用提示。</p></div>
+  </section>
+</main>
+<footer data-footer></footer>
+<script src="../course/assets/curriculum.js"></script>
+<script src="../course/assets/course.js"></script>
+<script src="../course/assets/viz.js"></script>
+<script src="datalab-cases.js"></script>
+<script src="datalab.js"></script>
+</body>
+</html>

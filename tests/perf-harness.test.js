@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict');
+const H=require('../labs/perf-harness');
+const r=H.build(H.starter,'rotate');
+const s=H.build(H.starter,'smooth');
+assert.match(r.source,/ROTATE_HASH/);
+assert.match(s.source,/SMOOTH_HASH/);
+assert.match(r.source,/void rotate\(/);
+assert.match(s.source,/void smooth\(/);
+const rp=H.parse('ROTATE_HASH 0123456789abcdef\n','rotate');
+assert.equal(rp.ok,true);assert.equal(rp.value,'0123456789abcdef');
+const sp=H.parse('SMOOTH_HASH deadbeef\n','smooth');
+assert.equal(sp.ok,true);assert.equal(sp.value,'deadbeef');
+assert.equal(H.same(rp.value,'0123456789abcdef'),true);
+assert.equal(H.same(rp.value,'0123456789abcdee'),false);
+assert.throws(()=>H.build('x','bad'),/未知 kernel/);
+console.log('Performance harness：官方 rotate/smooth 源构造、hash 解析与一致性比较通过');

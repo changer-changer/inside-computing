@@ -1,0 +1,1 @@
+const assert=require('node:assert/strict');const {template,build}=require('../engine/heap-exercise');assert.match(build(template),/my_malloc\(240\)==NULL/);assert.match(build(template),/PASS 7 allocator checks/);assert.throws(()=>build('x'.repeat(50001)));console.log('分配器作业：模板、边界测试与长度限制检查通过');

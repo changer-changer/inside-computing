@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict');
+const {parse}=require('../engine/shell-lab-report');
+const samples={interval:0.08,attempts:2,maxGap:0.2,frames:[{seconds:0.1,processes:[{pid:3,ppid:2,pgid:3,state:'S',name:'tsh',start:'123'}]}],truncated:false,error:null};
+const r={format:'open3d-shell-report-v1',traceName:'trace03.txt',trace:'quit\n',directory:'/tmp/test',unchanged:true,buildStale:false,hashes:{tsh:'0'.repeat(64)},student:{exit:0,timeout:false,output:'student',samples},reference:{exit:0,timeout:false,output:'reference',samples}};
+assert.equal(parse(JSON.stringify(r)).student.output,'student');
+assert.throws(()=>parse(JSON.stringify({...r,traceName:'../../bad'})));
+assert.throws(()=>parse(JSON.stringify({...r,student:{...r.student,timeout:'no'}})));
+assert.throws(()=>parse(JSON.stringify({...r,hashes:{tsh:'invalid'}})));
+assert.throws(()=>parse(JSON.stringify({...r,student:{...r.student,samples:{...samples,frames:[{seconds:-1,processes:[]}]}}})),/采样/);
+assert.throws(()=>parse('x'.repeat(262145)));
+console.log('Shell Lab 报告：原始输出、状态和输入边界通过');

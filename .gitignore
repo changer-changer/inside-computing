@@ -1,0 +1,38 @@
+# macOS / editors
+.DS_Store
+*.swo
+*.swp
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Secrets and local configuration
+.env
+.env.*
+*.local
+
+# Local virtual machines, disk images and official course handouts.
+# These are deliberately not part of the public repository.
+experiments/native-linux/assets/*
+!experiments/native-linux/assets/README.md
+experiments/browser-linux/assets/*
+!experiments/browser-linux/assets/README.md
+*.qcow2
+*.qcow2.*
+*.img
+*.iso
+*.raw
+
+# Local test / experiment outputs
+.proxy/
+.noproxy/
+coverage/
+dist/

@@ -1,0 +1,41 @@
+name: Bug report
+description: 报告课程页、实验工作台或可视化的问题
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请先确认你没有提交官方实验答案、个人作业或包含隐私的截图/镜像。
+  - type: input
+    id: url
+    attributes:
+      label: 页面或文件
+      description: 例如 course/chapter.html?ch=06 或 labs/lab.html?lab=cachelab
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 你点了什么、输入了什么、期望什么、实际发生了什么
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: 浏览器与设备
+      placeholder: Chrome 130 / macOS 15 / Apple Silicon
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: 控制台错误（可选）
+      render: text
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      options:
+        - label: 我没有在报告中包含官方实验答案、个人作业或隐私数据
+          required: true

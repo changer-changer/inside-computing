@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#07100d" />
+<title>完整课程 · 计算之境</title>
+<link rel="stylesheet" href="assets/course.css" />
+</head>
+<body data-mode="home" data-base="../" data-page="home">
+<header data-topbar></header>
+<main>
+  <section class="hero container">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">CS:APP 3e · 12 CHAPTERS · 9 OFFICIAL LABS</div>
+        <h1>把计算机系统<br>学成一门<em>可以运行的课</em>。</h1>
+        <p class="lead">从一行 C 代码的比特表示，到指令、流水线、Cache、虚拟内存、进程、网络与并发。每一章都有可操作的模型；每一个官方实验都有真实编译、真实执行与可复核的评分路径。</p>
+        <div class="hero-actions">
+          <a class="btn primary" id="continueBtn" href="chapter.html?ch=01">继续学习 →</a>
+          <a class="btn" href="exam.html">结业检查</a>
+          <a class="btn" href="../labs/index.html">直接进实验室</a>
+          <a class="btn" href="../index.html">回到 3D 实验台</a>
+        </div>
+        <div class="hero-meta">
+          <div><b>12</b><span>CHAPTERS</span></div>
+          <div><b>9 + 1</b><span>LABS · 含 LEGACY</span></div>
+          <div><b>64-bit</b><span>Y86 / X86-64</span></div>
+          <div><b>wasm32</b><span>IN-BROWSER C</span></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <canvas id="heroCanvas"></canvas>
+        <div class="art-caption"><b>计算之境 / INSIDE COMPUTING</b> · 64 位寄存器、Cache 行与函数栈帧在同一个画面里流动</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head">
+      <div><span class="eyebrow">THE PATH</span><h2>一条从比特到系统的路线</h2></div>
+      <p>按章节顺序学，或直接跳到正在上的那一章。进度、测验与实验得分只保存在本机。</p>
+    </div>
+    <div class="chapter-grid" id="chapterGrid"></div>
+    <div class="readout mt24" id="homeStats" style="grid-template-columns:repeat(4,1fr)"></div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head">
+      <div><span class="eyebrow">THE LABS</span><h2>九个官方实验，两条执行路径</h2></div>
+      <p>能在浏览器原生运行的，直接用真实 C 编译器 / Y86 / x86 模型；需要 Linux 进程、网络与官方评分的，连接本机实验机。</p>
+    </div>
+    <div class="lab-grid" id="labGrid"></div>
+    <div class="grid-3 mt24">
+      <div class="card"><h4>浏览器原生</h4><p>Data、Architecture、Cache、Performance、Malloc 等可从网页直接编辑、编译、检查，状态与可视化共用同一份执行数据。</p></div>
+      <div class="card"><h4>Linux 实验机</h4><p>Bomb、Attack、Shell、Proxy 与官方评分依赖真实 Linux 进程/信号/网络；通过网页终端连接，原始输出回传页面。</p></div>
+      <div class="card"><h4>不混淆模型与真机</h4><p>教学模型会明确标注。模型用于解释机制，官方实验分数以实验机中的官方工具为准。</p></div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head"><div><span class="eyebrow">HOW TO USE</span><h2>一次完整的学习循环</h2></div></div>
+    <div class="grid-3">
+      <div class="card"><h4>01 · 先预测</h4><p>每节先给一个可判断的问题。先写下你的答案，再动模型；错误预测比“看懂动画”更有信息。</p></div>
+      <div class="card"><h4>02 · 再操作</h4><p>逐位、逐指令、逐周期地改变一个变量，观察状态如何传播。所有读数来自同一个模型。</p></div>
+      <div class="card"><h4>03 · 然后迁移</h4><p>换一个输入、换一种缓存参数、换一条指令，解释为什么结果变了。最后用实验检查闭环。</p></div>
+    </div>
+  </section>
+</main>
+<footer data-footer></footer>
+<script src="assets/curriculum.js"></script>
+<script src="assets/course.js"></script>
+<script>
+(function(){
+  var c=document.getElementById('heroCanvas');if(!c)return;var ctx=c.getContext('2d');
+  var dpr=Math.min(2,window.devicePixelRatio||1),w=0,h=0,pts=[];
+  function resize(){var r=c.getBoundingClientRect();w=r.width;h=r.height;c.width=w*dpr;c.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  for(var i=0;i<26;i++)pts.push({x:Math.random(),y:Math.random(),s:Math.random()*1.4+.5,p:Math.random()*Math.PI*2});
+  function draw(t){
+    if(!w)resize();ctx.clearRect(0,0,w,h);
+    var g=ctx.createRadialGradient(w/2,h*.46,10,w/2,h*.46,Math.max(w,h)*.7);g.addColorStop(0,'rgba(28,58,43,.65)');g.addColorStop(1,'rgba(5,13,9,0)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle='rgba(200,229,143,.18)';ctx.lineWidth=1;
+    for(var k=0;k<3;k++){ctx.beginPath();ctx.ellipse(w/2,h*.47,w*(.24+k*.06),h*(.12+k*.035),-.32,0,Math.PI*2);ctx.stroke();}
+    var bx=w/2,by=h*.47,bw=Math.min(w*.34,150),bh=bw*.62;
+    ctx.fillStyle='rgba(24,52,39,.85)';ctx.strokeStyle='rgba(200,229,143,.55)';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect(bx-bw/2,by-bh/2,bw,bh,10);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#c8e58f';ctx.font='600 9px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText('COMPUTER AUTONOMY',bx,by-6);ctx.fillStyle='#e9f1e7';ctx.font='600 22px ui-monospace,monospace';ctx.fillText('64',bx,by+20);
+    for(var j=0;j<pts.length;j++){var p=pts[j],x=(p.x*w+Math.sin(t/2200+p.p)*8)%w,y=(p.y*h+Math.cos(t/2600+p.p)*6)%h;ctx.fillStyle='rgba(200,229,143,'+(.12+p.s*.16)+')';ctx.beginPath();ctx.arc(x,y,p.s,0,Math.PI*2);ctx.fill();}
+    requestAnimationFrame(draw);
+  }
+  resize();window.addEventListener('resize',resize);requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

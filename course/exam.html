@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#07100d" />
+<title>结业检查 · 计算之境</title>
+<link rel="stylesheet" href="assets/course.css" />
+</head>
+<body data-mode="exam" data-base="../" data-page="exam">
+<header data-topbar></header>
+<main class="container course-shell" style="display:block">
+  <section class="lesson">
+    <header class="lesson-head">
+      <div class="crumb"><b>CAPSTONE</b><span>/</span><span>12 CHAPTERS · ONE PICTURE</span></div>
+      <h1>结业检查</h1>
+      <p class="summary">12 道题覆盖 CS:APP 第 1–12 章的核心因果链：从一条 C 语句如何变成进程、缓存命中、链接地址、系统调用与并发交错。答完提交后立即评分并给出解析；成绩保存在本机，也会进入学习作品集。</p>
+      <div class="hero-actions"><a class="btn" href="index.html">← 课程总览</a><a class="btn" href="progress.html">学习档案</a></div>
+    </header>
+    <div id="examSaved"></div>
+    <div id="examList"></div>
+    <div class="flex wrap gap8" style="margin:18px 0"><button class="btn primary" type="button" id="examSubmit">提交并评分</button><button class="btn" type="button" id="examRetry">重做</button></div>
+    <div id="examResult"></div>
+  </section>
+</main>
+<footer data-footer></footer>
+<script src="assets/curriculum.js"></script>
+<script src="assets/course.js"></script>
+<script>
+(function(){
+  var CA=window.CA;
+  var QUESTIONS=[
+    {ch:1,q:'把 hello.c 变成可执行文件，通常的顺序是？',options:['预处理 → 编译 → 汇编 → 链接','编译 → 预处理 → 链接 → 汇编','汇编 → 链接 → 编译 → 预处理','链接 → 编译 → 预处理 → 汇编'],answer:0,explain:'cpp 展开宏/头文件，cc1 生成汇编，as 生成 .o，ld 合并重定位。'},
+    {ch:2,q:'32 位补码中，0xFFFFFFFF 作为有符号 int 的值是？',options:['-1','1','2147483647','-2147483648'],answer:0,explain:'全 1 的补码表示 -1；无符号解释才是 4294967295。'},
+    {ch:3,q:'x86-64 中 call 指令压入栈的是什么？',options:['返回地址（call 的下一条指令地址）','调用者的 %rbp','被调用函数的第一个参数','一个 16 字节的栈帧'],answer:0,explain:'call 先把返回地址压栈，再跳到目标；ret 从栈顶弹出返回地址。'},
+    {ch:4,q:'Y86-64 的 irmovq 指令主要做什么？',options:['把立即数写入寄存器','从内存读一个字节','把寄存器写入内存','无条件跳转到立即数地址'],answer:0,explain:'irmovq 是立即数到寄存器；它不访问数据内存，常用于常量和地址。'},
+    {ch:5,q:'一个循环的 CPE 主要由什么决定？',options:['每次迭代的关键路径与吞吐资源，而不只是指令条数','源代码行数','变量名的长度','编译器的版本号'],answer:0,explain:'CPE 是把周期摊到元素；延迟链、功能单元吞吐、循环开销共同决定，指令少不一定快。'},
+    {ch:6,q:'直接映射缓存中，地址的哪一部分选择组/行？',options:['索引位（index bits）','标记位（tag bits）','块内偏移（block offset）','整个虚拟地址'],answer:0,explain:'index 选择组，tag 与组内标记比较，block offset 选择块内字节。'},
+    {ch:7,q:'PC 相对重定位中，call 的位移通常按哪个公式填入？',options:['S + A - P','S - A + P','P - S - A','A - S - P'],answer:0,explain:'S 是符号最终地址，A 是加数（call 常为 -4），P 是重定位字段地址；x86 的 call 位移相对下一条指令。'},
+    {ch:8,q:'父进程收到 SIGCHLD 后，最稳妥的回收方式是？',options:['用 waitpid 循环回收，并处理 EINTR','忽略所有信号','直接 exit','用 sleep 等待子进程自己消失'],answer:0,explain:'SIGCHLD 不排队；应在 handler 中用 waitpid(WNOHANG) 循环回收，并处理被信号中断的系统调用。'},
+    {ch:9,q:'TLB 的作用是什么？',options:['缓存虚拟页到物理页的转换，减少每次访问查页表','缓存磁盘块','保存 CPU 寄存器','压缩可执行文件'],answer:0,explain:'TLB 是页表项的高速缓存；命中时无需访问多级页表，未命中才走页表 walk。'},
+    {ch:10,q:'Unix 中文件描述符本质上是？',options:['进程打开文件表里的一个小整数索引','文件在磁盘上的物理地址','一个 C 结构体','文件的完整路径'],answer:0,explain:'fd 是进程描述符表中的索引；0/1/2 通常是 stdin/stdout/stderr，read/write 通过 fd 找到打开文件表项。'},
+    {ch:11,q:'HTTP 代理缓存一个响应时，最需要先确认什么？',options:['请求方法、URI/ Host 与响应是否可缓存','浏览器窗口大小','客户端 CPU 型号','代理进程的 PID'],answer:0,explain:'缓存键通常由 host+path 组成；只缓存可缓存的成功响应，并正确处理并发与失效。'},
+    {ch:12,q:'两个线程同时执行 counter++，即使机器码只有一条 add，也可能出错，原因是？',options:['读-改-写不是原子操作，线程可能交错','counter 一定是全局变量','编译器不允许 ++','线程不能共享内存'],answer:0,explain:'counter++ 通常编译为 load/add/store；两个线程可能同时读到旧值，造成丢失更新。需要互斥或原子操作。'}
+  ];
+  var KEY='ca.exam.v1', saved=null;
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){}
+  function esc(s){return CA.esc(s);}
+  function rot(qi){return qi%4;}
+  function displayOptions(q,qi){var r=rot(qi);return q.options.slice(r).concat(q.options.slice(0,r));}
+  function displayAnswer(q,qi){return (q.answer-rot(qi)+4)%4;}
+  function render(savedAnswers, submitted){
+    var list=document.getElementById('examList'); list.innerHTML='';
+    QUESTIONS.forEach(function(q,qi){
+      var div=document.createElement('div'); div.className='quiz'+(submitted?' answered':'');
+      div.innerHTML='<div class="q-head"><span class="q-label">第 '+(qi+1)+' 题 · CH '+q.ch+'</span><span class="badge plain">1 分</span></div><div class="q-text">'+esc(q.q)+'</div>';
+      var box=document.createElement('div'); box.className='q-options';
+      displayOptions(q,qi).forEach(function(t,oi){
+        var b=document.createElement('button'); b.type='button'; b.className='q-option'; b.innerHTML='<span class="key">'+String.fromCharCode(65+oi)+'</span><span>'+esc(t)+'</span>';
+        if(submitted){
+          b.disabled=true;
+          if(oi===displayAnswer(q,qi))b.classList.add('correct');
+          if(savedAnswers && savedAnswers[qi]===oi && oi!==displayAnswer(q,qi))b.classList.add('wrong');
+        } else {
+          b.addEventListener('click',function(){
+            box.querySelectorAll('.q-option').forEach(function(x){x.classList.remove('selected');});
+            b.classList.add('selected'); b.dataset.selected='1';
+          });
+        }
+        box.appendChild(b);
+      });
+      div.appendChild(box);
+      if(submitted){
+        var ex=document.createElement('div'); ex.className='q-explain'; ex.style.display='block'; ex.innerHTML='<b>解析：</b>'+q.explain; div.appendChild(ex);
+      }
+      list.appendChild(div);
+    });
+  }
+  function score(answers){
+    var correct=0; QUESTIONS.forEach(function(q,i){if(answers[i]===displayAnswer(q,i))correct++;});
+    return {correct:correct,total:QUESTIONS.length,score:Math.round(correct/QUESTIONS.length*100)};
+  }
+  function saveResult(answers){
+    var s=score(answers), data={score:s.score,correct:s.correct,total:s.total,answers:answers,at:new Date().toISOString()};
+    try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
+    return data;
+  }
+  function showResult(data){
+    var r=document.getElementById('examResult');
+    r.innerHTML='<div class="callout '+(data.score>=80?'info':'warn')+'"><div class="c-title">结业检查：'+data.score+' / 100</div><p>答对 '+data.correct+' / '+data.total+' 题。'+(data.score>=80?'已经能把 12 章的核心因果链串起来。':'建议回到错题对应章节，把概念与实验再走一遍。')+'</p></div>';
+    document.getElementById('examSaved').innerHTML='<div class="callout info"><div class="c-title">已保存本机成绩</div><p>上次得分 <b>'+data.score+' / 100</b>。重做会覆盖本机记录；成绩也会进入学习作品集。</p></div>';
+    render(data.answers,true);
+  }
+  function currentAnswers(){
+    var answers={};
+    document.querySelectorAll('#examList .quiz').forEach(function(q,qi){
+      var sel=q.querySelector('.q-option.selected'); if(sel) answers[qi]=Array.prototype.indexOf.call(q.querySelectorAll('.q-option'),sel);
+    });
+    return answers;
+  }
+  document.getElementById('examSubmit').addEventListener('click',function(){
+    var a=currentAnswers();
+    if(Object.keys(a).length<QUESTIONS.length){CA.toast('还有题目未作答');return;}
+    var data=saveResult(a); showResult(data); CA.toast('已保存结业检查成绩 '+data.score+' / 100');
+    window.scrollTo({top:document.getElementById('examResult').offsetTop-80,behavior:'smooth'});
+  });
+  document.getElementById('examRetry').addEventListener('click',function(){
+    if(!confirm('重做会覆盖本机保存的结业检查成绩，继续？'))return;
+    try{localStorage.removeItem(KEY);}catch(e){}
+    document.getElementById('examSaved').innerHTML=''; document.getElementById('examResult').innerHTML=''; render({},false); window.scrollTo({top:0,behavior:'smooth'});
+  });
+  if(saved && typeof saved.score==='number'){ showResult(saved); }
+  else { render({},false); }
+})();
+</script>
+</body>
+</html>

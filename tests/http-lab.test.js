@@ -1,0 +1,4 @@
+const assert=require('node:assert/strict');const {HttpLab}=require('../engine/http-lab');
+let m=new HttpLab('/');assert.equal(m.step().phase,'dns');assert.equal(m.step().phase,'connect');let q=m.step();assert.match(q.request,/^GET \/ HTTP\/1\.1\r\nHost: lab\.example\r\n/);assert.equal(q.bytes,new TextEncoder().encode(q.request).length);let r=m.step();assert.equal(r.status,200);assert.equal(r.length,new TextEncoder().encode(r.body).length);assert.match(r.response,/\r\n\r\nHello, systems!/);assert.equal(m.step().phase,'close');assert.equal(m.step().phase,'done');
+m=new HttpLab('/missing');m.step();m.step();m.step();r=m.step();assert.equal(r.status,404);assert.equal(r.length,10);assert.throws(()=>new HttpLab('/x\r\nEvil: header'));assert.throws(()=>new HttpLab('https://example.com'));
+console.log('网络实验：请求格式、响应字节数、404 与输入边界检查通过');

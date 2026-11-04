@@ -1,0 +1,3 @@
+const assert=require('node:assert/strict');const {parseYo}=require('../engine/yo-loader');
+const a=parseYo('0x000: 30f00100000000000000 | irmovq\n0x00a: 00 | halt\n0x100: 2a00000000000000 | value\n');assert.equal(a.loadedBytes,19);assert.equal(a.bytes.length,264);assert.equal(a.bytes[0],0x30);assert.equal(a.bytes[256],42);assert.throws(()=>parseYo('0x00: 0 | odd'));const overlap=parseYo('0x00: 00\n0x00: ff');assert.equal(overlap.bytes[0],255);assert.equal(overlap.overwrittenBytes,1);assert.throws(()=>parseYo('0xfff: aabb'));assert.throws(()=>parseYo('not-a-record'));assert.throws(()=>parseYo(' | comment'));
+console.log('Y86 目标文件：稀疏地址、错误字节、重叠覆盖顺序和内存边界通过');

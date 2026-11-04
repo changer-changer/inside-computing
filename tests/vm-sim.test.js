@@ -1,0 +1,2 @@
+const assert=require('node:assert/strict');const {VirtualMemorySim}=require('../engine/vm-sim');
+const vm=new VirtualMemorySim();assert.deepEqual(vm.translate(0x05),{address:5,vpn:0,offset:5,frame:2,fault:false,physical:37});assert.deepEqual(vm.translate(0x25),{address:37,vpn:2,offset:5,frame:0,fault:false,physical:5});assert.deepEqual(vm.translate(0x15),{address:21,vpn:1,offset:5,frame:null,fault:true,physical:null});assert.throws(()=>vm.translate(256),RangeError);assert.throws(()=>new VirtualMemorySim({mapping:{0:5}}));console.log('虚拟内存：页号、偏移、映射、缺页和地址边界检查通过');

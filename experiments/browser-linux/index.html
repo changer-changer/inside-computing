@@ -1,0 +1,14 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>浏览器 Linux 验证</title>
+<link rel="stylesheet" href="./assets/xterm/xterm.css"><style>body{max-width:900px;margin:40px auto;padding:0 20px;background:#101b19;color:#eff8f1;font:15px/1.6 system-ui}#terminal{background:#000;padding:8px}small{color:#bccdc4}</style>
+<h1>浏览器 Linux 兼容性验证</h1><p>开发者试验：组件加载不代表 Linux 已经启动。此页面不是学生实验入口。</p><p id="status" role="status">准备组件中……</p><div id="terminal" aria-label="试验终端"></div><p><small>本页面运行本机浏览器内的虚拟机，不连接宿主 shell；刷新会丢失虚拟机内更改。</small></p>
+<script src="./assets/xterm/xterm.js"></script><script src="./assets/pty/index.js"></script><script>
+const experimentOptions=new URLSearchParams(location.search),microvm=experimentOptions.get('machine')==='microvm';
+const kernelParams='console=ttyS0 root=/dev/vda noautodetect '+(microvm?'noapic tsc=reliable':'no_timer_check tsc=reliable clocksource=tsc')+(experimentOptions.get('init')==='sh'?' rdinit=/bin/sh':'')+' hostname=open3d';
+var Module={arguments:['-nographic','-M',microvm?'microvm,pit=on,pic=on,rtc=on':'pc','-m','512M','-accel','tcg,tb-size=500','-L','/pack-rom/',...(microvm?['-bios','/bios-microvm.bin']:[]),'-nic','none','-kernel','/pack-kernel/vmlinuz-virt','-initrd','/pack-initramfs/initramfs-virt','-append',kernelParams,'-drive','id=test,file=/pack-rootfs/disk-rootfs.img,format=raw,if=none','-device',(microvm?'virtio-blk-device':'virtio-blk-pci')+',drive=test'],locateFile:(path)=>new URL('./assets/'+path,location.href).href,mainScriptUrlOrBlob:new URL('./assets/out.js',location.href).href};
+</script><script src="./assets/load-rootfs.js"></script><script src="./assets/load-kernel.js"></script><script src="./assets/load-initramfs.js"></script><script src="./assets/load-rom.js"></script>
+<script type="module">
+import init from './assets/out.js';
+const status=document.getElementById('status');
+window.addEventListener('error',event=>{status.textContent='运行错误：'+event.message;});
+try { const terminal=new Terminal({scrollback:1500});terminal.open(document.getElementById('terminal'));const {master,slave}=openpty();terminal.loadAddon(master);Module.pty=slave;if(microvm){const response=await fetch('./assets/bios-microvm.bin');if(!response.ok)throw Error('BIOS 加载失败');const rom=new Uint8Array(await response.arrayBuffer());Module.preRun.push(m=>m.FS.writeFile('/bios-microvm.bin',rom));}status.textContent='正在加载虚拟机并尝试启动 Linux，请观察下方输出。';await init(Module); } catch(error) { status.textContent='启动失败：'+error.message;console.error(error); }
+</script></html>

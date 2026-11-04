@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict');
+const {parse}=require('../engine/official-malloc-trace');
+const transfer=require('../engine/yo-transfer');
+const example={format:'open3d-malloc-trace-v1',trace:'short.rep',driverExit:86,validityComplete:true,instructions:[{op:'alloc',id:0,size:8},{op:'alloc',id:1,size:16},{op:'free',id:0,size:0},{op:'realloc',id:1,size:24}],events:[{op:'init',heap:0,code:0},{op:'alloc',size:8,old:-1,ptr:8,heap:16},{op:'alloc',size:16,old:-1,ptr:24,heap:40},{op:'free',size:0,old:8,ptr:-1,heap:40},{op:'realloc',size:24,old:24,ptr:48,heap:72}]};
+const raw=JSON.stringify(example),encoded=transfer.MALLOC_PREFIX+Buffer.from(raw).toString('base64');
+const result=parse(transfer.decode(encoded));
+assert.equal(result.validityComplete,true);
+assert.deepEqual(result.frames.map(x=>x.blocks.map(b=>b.start)),[[],[8],[8,24],[24],[48]]);
+assert.equal(result.frames[4].blocks[0].size,24);
+const failed=structuredClone(example);failed.events=failed.events.slice(0,2);failed.events[1].ptr=-1;failed.driverExit=0;
+const bad=parse(JSON.stringify(failed));assert.equal(bad.validityComplete,false);assert.match(bad.frames[1].warning,/无效地址/);assert.equal(bad.frames[1].blocks.length,0);
+const overlap=structuredClone(example);overlap.events[2].ptr=12;
+const o=parse(JSON.stringify(overlap));assert.equal(o.validityComplete,false);assert.match(o.frames[2].warning,/重叠/);assert.deepEqual(o.frames[2].blocks.map(b=>b.id),[0]);
+const broken=structuredClone(example);broken.events[2].size=2;assert.throws(()=>parse(JSON.stringify(broken)));
+assert.throws(()=>transfer.decode(transfer.MALLOC_PREFIX+Buffer.alloc(262145).toString('base64')));
+console.log('Malloc Lab: actual calls, failures, bounds and transfer verified');

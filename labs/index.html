@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#07100d" />
+<title>实验室 · 计算之境</title>
+<link rel="stylesheet" href="../course/assets/course.css" />
+</head>
+<body data-mode="labs" data-base="../" data-page="labs">
+<header data-topbar></header>
+<main>
+  <section class="lab-hero container">
+    <div class="back"><a href="../course/index.html">← 课程总览</a> / <a href="../index.html">3D 实验台</a></div>
+    <h1>实验室</h1>
+    <div class="en">CS:APP OFFICIAL LABS · BROWSER + LINUX</div>
+    <p class="tagline">官方实验不是“看动画”。能原生执行的，给你真实编译器与执行器；需要进程、信号、网络与官方评分的，给你一条可复现的 Linux 实验机路径。每个实验页面都标清模式、评分口径与当前能验证到什么程度。</p>
+    <div class="lab-stats">
+      <div class="stat"><b>9 + 1</b><span>官方实验 · 含 legacy</span></div>
+      <div class="stat"><b>10</b><span>含浏览器检查</span></div>
+      <div class="stat"><b>0</b><span>仅指南</span></div>
+      <div class="stat"><b>100</b><span>每项满分</span></div>
+    </div>
+  </section>
+  <section class="section container">
+    <div class="section-head">
+      <div><span class="eyebrow">ALL LABS</span><h2>按章节进入，或直接开做</h2></div>
+      <p>Data / Bomb / Attack / Architecture / Cache / Performance / Shell / Malloc / Proxy；Buffer 作为第三版之前的 legacy 对照。</p>
+    </div>
+    <div class="lab-grid" id="labsGrid"></div>
+  </section>
+  <section class="section container">
+    <div class="section-head"><div><span class="eyebrow">BEFORE YOU START</span><h2>两条路径，同一套验收标准</h2></div></div>
+    <div class="grid-2">
+      <div class="card"><h4>浏览器原生实验</h4><p>源码在浏览器内用 Clang/wasm32 编译（Data、Malloc、Performance 等），或由项目自建 Y86-64/x86-64 执行器执行。自动检查是确定性的，但不等同于官方 btest/mdriver 的逐项复刻；页面上会明确写出差异。代码与进度保存在本机。</p></div>
+      <div class="card"><h4>Linux 实验机</h4><p>官方 bomb、attack、shell、proxy 与官方 test-trans/mdriver 需要真实 Linux。项目提供 Debian x86-64 实验机、网页终端与原始输出回传；评分以官方工具输出为准。实验机默认不联网，工作区持久保存在本机。</p></div>
+    </div>
+    <div class="callout info mt24"><div class="c-title">学术诚信</div><p>实验用于学习。页面提供提示、调试器与可复核的测试，但不提供官方实验的标准答案；参考实现仅用于开发期验证，不随产品发布。请遵守你所在课程的规定。</p></div>
+  </section>
+</main>
+<footer data-footer></footer>
+<script src="../course/assets/curriculum.js"></script>
+<script src="../course/assets/course.js"></script>
+</body>
+</html>
