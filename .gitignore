@@ -36,3 +36,7 @@ experiments/browser-linux/assets/*
 .noproxy/
 coverage/
 dist/
+
+# Keep the WASI shim's built dist (matched by the generic dist/ rule above).
+!vendor/wasi/dist/
+!vendor/wasi/dist/**
