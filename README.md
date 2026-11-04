@@ -7,9 +7,12 @@
 [![content: CC BY-NC-SA 4.0](https://img.shields.io/badge/content-CC%20BY--NC--SA%204.0-4c8bf5.svg)](LICENSE-CONTENT.md)
 [![source-available](https://img.shields.io/badge/status-source--available%20%C2%B7%20not%20OSI%20open%20source-important.svg)](COMMERCIAL.md)
 [![no build step](https://img.shields.io/badge/build-none%20needed-6f42c1.svg)](#快速开始)
+[![live demo](https://img.shields.io/badge/live%20demo-GitHub%20Pages-2ea44f.svg)](https://changer-changer.github.io/inside-computing/)
 
 > 这是一个教学项目，不是 CS:APP 官方产品，也不分发官方实验答案。官方实验原包与 Linux VM 资产因体积和授权原因不放入本仓库；课程层、实验模型、自动检查与结果导入链接仍可直接运行。
 >
+**在线演示：** <https://changer-changer.github.io/inside-computing/>
+
 > **许可提示**：本仓库公开源代码，但采用**非商业**许可（PolyForm Noncommercial / CC BY-NC-SA 4.0），不是 OSI 定义的开源软件；公司或收费服务需要另行取得商业许可，见 [COMMERCIAL.md](COMMERCIAL.md)。
 
 ![课程总览](docs/screenshots/course-home.png)
